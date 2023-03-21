@@ -145,7 +145,7 @@ The second, [test-some.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/
 
 ## Results
 
-Out of 288 instructions, from `gpt-4` ***only 2 don't match the reference!***
+It took me 77 minutes to run `run-all-instructions.py` on March 20th, 2023.  Out of 288 instructions, from `gpt-4` ***only 2 don't match the reference.***
 
 One of them is a mismatch in PC from BRK, so I don't care much about that.  `gpt-4` might actually be correct about that; the PC actually should be pushed and reloaded from a two-byte vector in memory, so I could also be confusing the model.
 
