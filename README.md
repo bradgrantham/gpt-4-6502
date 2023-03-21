@@ -182,7 +182,7 @@ The notable wrong part is `A = A & MEMORY[16]; // A becomes 16 & 4 = 4`.  I'm no
 
 At a practical level, I don't think anyone is going to implement a 6502 using a multi-gigabyte model that costs around $0.08 an instruction to run.  But in 10 years will they?  It probably makes more sense to train a model specifically to replace the microprocessor for simulation or whatever.
 
-One thing you probably *could* do right now is use `gpt-4` or ChatGPT in GPT-4 mode as a reference for implementing an emulator.  I couldn't get ChatGPT in GPT-3 mode to give me a reasonable emulation switch statement six months ago, but I've learned a little about prompt engineering since then.  You might also be able to use GPT-4 to help you reverse-engineer a microprocessor.  Some 8-bit processors are still in quite common use.
+One thing you probably *could* do right now is use `gpt-4` or ChatGPT in GPT-4 mode as a reference for implementing an emulator.  I couldn't get ChatGPT in GPT-3 mode to give me a reasonable emulation switch statement six months ago, but I didn't know much about prompt engineering then.  You might also be able to use GPT-4 to help you reverse-engineer a microprocessor or debug your code.  Some 8-bit processors are still in quite common use.
 
 ### Implications
 
