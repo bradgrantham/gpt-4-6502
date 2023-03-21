@@ -14,8 +14,8 @@ Execute the pseudo-code for the instruction, then finish with "CPU: MEMORY[]={me
   * Opcode 169 is LDA I; A = I
   * Opcode 198 is DEC L; MEMORY[L] = MEMORY[L] - 1
   * Opcode 230 is INC L; MEMORY[L] = MEMORY[L] + 1
-  * Opcode 37 is AND L; A &&= MEMORY[L]
-  * Opcode 5 is ORA L; A = bitwise-or(MEMORY[L], A)
+  * Opcode 37 is AND L; A = A & MEMORY[L]
+  * Opcode 5 is ORA L; A = A | MEMORY[L]
   * Opcode 16 is BPL M; if N flag is clear, PC=PC+2+M
   * Opcode 240 is BEQ M; if Z flag set, PC=PC+2+M
   * Opcode 208 is BNE M; if Z flag is clear, PC=PC+2+M
@@ -68,3 +68,4 @@ B = -65;
 // PC + 2 = 1611 + 2 = 1613
 if(Z) { PC = PC + 2 + B; } else { PC = PC + 2; }
 CPU: MEMORY[]={0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 3}, A=0, X=1, N=0, Z=1, PC=1548
+
