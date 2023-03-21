@@ -16,7 +16,7 @@ More importantly, the emulation would need to be nearly 100% accurate, and it’
 
 On the suggestion of my friend [Lawrence Kesteloot](https://www.teamten.com/lawrence/) I implemented a short [“FizzBuzz”](https://en.wikipedia.org/wiki/Fizz_buzz) program directly in 6502 assembly language. I used [Nick Morgan’s excellent online 6502 assembler and emulator](https://skilldrick.github.io/easy6502/) to write the code and test it.
 
-[Here's fizzbuzz.asm on GitHub.](https://github.com/bradgrantham/gpt-4-6502/blob/main/fizzbuzz.asm)
+[Here's fizzbuzz.asm.](https://github.com/bradgrantham/gpt-4-6502/blob/main/fizzbuzz.asm)
 
 When executed, the result of memory locations 1 through 15 are 0xFB if the memory index is FizzBuzz (divisible by 3 and 5), 0xF0 if the index is Fizz, 0xB0 if Buzz, or the value of the index itself otherwise.  So that looks like this in decimal numbers including memory location 0:
 
@@ -58,7 +58,7 @@ I only use the A and X registers, the N and Z flags, and 18 bytes of zero-page R
 
 # Asking ChatGPT to run it directly
 
-Just to get a feel how far off I was, I asked `gpt-4` what the contents of memory are after running the machine code hexdump and then in a separate query after running the disassembly.
+Just to get a feel how far off I was, after providing the entire machine code in hex I asked `gpt-4`  the contents of memory in a separate query.
 
 ```
 After running the provided 6502 machine code, the memory locations from 0 to 15 would contain the following values:
@@ -133,15 +133,13 @@ I give a few examples of instructions, so this isn't really a zero-shot prompt. 
 
 In order to execute an instruction, I take my prompt and append the "current" state vector and the bytes for the next instruction, then I send that whole thing to [OpenAI's web API as a JSON completion request](https://platform.openai.com/docs/guides/chat).  (That's why I've used `gpt-4` instead of GPT-4 throughout most of this README; `gpt-4` is the name of the model in the API.)
 
-(I cheat a little bit because I'm decoding the instruction a little bit on my own up front to know how many bytes are in it.  In my earlier experiments when I hoped `gpt-3.5-turbo` could reply to me asking for each byte from memory and then telling me bytes to write to memory it got hopelessly wrong and verbose.)
+I cheat a little bit because I'm decoding the instruction a little bit on my own up front to know how many bytes are in it.  In my earlier experiments when I hoped `gpt-3.5-turbo` could reply to me asking for each byte from memory and then telling me bytes to write to memory it got hopelessly wrong and verbose.
 
-Although I have C++ code to emulate a 6502 microprocessor, in order to aid tooling to compare with results from `gpt-4`, I implemented emulation in a little bit of Python just for the subset in this test. 
+My original 6502 microprocessor emulation is in C++, but to aid tooling in comparing results from `gpt-4` I've implemented a subset of this emulation for this test in a little bit of Python.
 
-I’ve implemented two tools for testing.
+The main script, [run-all-instructions.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/run-all-instructions.py), runs the 6502 program all the way through, one instruction at a time, to generate the reference results, and then sends each instruction with my hand-crafted prompt to OpenAI’s Python API as well. The script does not check the correctness of the output from OpenAI. Instead, I used the saved output to assess how close my prompt brought `gpt-4` to accurate results for all of the machine states and instruction variants in the program. This script takes on the order of $24 to run all 288 instructions at OpenAI’s `gpt-4` rates as of March 2023, depending highly on the prompt and how verbose the response is. (So running on the order of 500K instructions to get to an Apple ][ prompt would have cost me around **forty thousand dollars**!)
 
-The first, [run-all-instructions.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/run-all-instructions.py), runs the program all the way through, one instruction at a time, to generate the reference results, and then sends each instruction with my hand-crafted prompt to OpenAI’s Python API as well. The script does not check the correctness of the output from OpenAI. Instead, I used the saved output to assess how close my prompt brought `gpt-4` to accurate results for all of the machine states and instruction variants in the program. This script takes on the order of $24 to run all 288 instructions at OpenAI’s `gpt-4` rates as of March 2023, depending highly on the prompt and how verbose the response is. (So running on the order of 500K instructions to get to an Apple ][ prompt would have cost me around **forty thousand dollars**!)
-
-The second, [test-some.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/test-some.py), runs one or more machine state vectors and instructions just so I can see the output. This limits my cost for the OpenAI and allows me to quickly try different prompt variants.
+A second script, [test-some.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/test-some.py), runs one or more machine state vectors and instructions just so I can see the output. This limits my cost for the OpenAI and allows me to quickly try different prompt variants.
 
 ## Results
 
@@ -188,7 +186,7 @@ The other is a bitwise error.  The instruction and state vector is:
 uint8_t MEMORY[]={0, 1, 2, 240, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 1}, A=16, X=3, N=0, Z=0; uint16_t PC=1609;
 ```
 
-And the reference results from my hand-written Python are:
+And the reference results from my Python version are:
 
 ```
     DESC: AND 16; 2 bytes; load memory from memory location 16 and bitwise-AND into accumulator
@@ -207,7 +205,7 @@ But `gpt-4` responded with this:
     CPU: MEMORY[]={0, 1, 2, 240, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 1}, A=4, X=3, N=0, Z=0, PC=1611
 ```
 
-The notable wrong part is `A = A & MEMORY[16]; // A becomes 16 & 4 = 4`.  I'm not sure why `gpt-4` thinks that.  Maybe it decided 16 was hexadecimal after all, in which case `16 & 4` would in fact be 4.
+The notable wrong part is `A = A & MEMORY[16]; // A becomes 16 & 4 = 4`.  I'm not sure why `gpt-4` thinks that.  Maybe the model decided 16 was hexadecimal even after I specified all numbers were decimal, in which case `0x16 & 4` would in fact be 4.
 
 ## Conclusions
 
