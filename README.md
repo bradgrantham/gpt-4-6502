@@ -14,6 +14,10 @@ I spent a chunk of a weekend engineering a JSON protocol for interfacing an exte
 
 More importantly, the emulation would need to be nearly 100% accurate, and it’s not immediately obvious what prompt to use to ensure accuracy. I’m willing to reduce the program size and microprocessor feature set somewhat and still feel like I could make a credible assessment.
 
+## Limiting the Scope of the Experiment
+
+[Source](https://github.com/bradgrantham/gpt-4-6502)
+
 On the suggestion of my friend [Lawrence Kesteloot](https://www.teamten.com/lawrence/) I implemented a short [“FizzBuzz”](https://en.wikipedia.org/wiki/Fizz_buzz) program directly in 6502 assembly language. I used [Nick Morgan’s excellent online 6502 assembler and emulator](https://skilldrick.github.io/easy6502/) to write the code and test it.
 
 [Here's fizzbuzz.asm.](https://github.com/bradgrantham/gpt-4-6502/blob/main/fizzbuzz.asm)
@@ -56,7 +60,7 @@ I only use the A and X registers, the N and Z flags, and 18 bytes of zero-page R
 | 208    | BNE        | Signed 8-bit relative branch "if not equal" (if the Z flag is set) |
 | 76     | JMP        | Absolute value jump (to a 16-bit address)                    |
 
-# Asking ChatGPT to run it directly
+### Asking ChatGPT to run it directly
 
 Just to get a feel for how far off I was, after providing the entire machine code in hex I asked `gpt-4`  the contents of memory in a separate query.
 
@@ -74,7 +78,7 @@ Of course that doesn’t work, `gpt-4` is still a feed-forward network at its co
 
 However, ChatGPT (not using the developer playground) surprised me with a really good disassembly listing from this raw hexdump.  I suggest you paste in the hexdump and ask it for a disassembly for that 6502 machine code block.
 
-# One Instruction At A Time
+## One Instruction At A Time
 
 So I continued with my original approach, running one instruction at a time. I tried a bunch of initial experiments, hoping for a prompt that would allow GPT-3 and then GPT-4 to interpret some kind of regular machine state input, then give me back a machine-readable state vector output.
 
@@ -130,8 +134,6 @@ CPU: MEMORY[]={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4}, A=6, X=
 I give a few examples of instructions, so this isn't really a zero-shot prompt.  I'm telling the model that I expect to give it a machine state vector and then the instruction bytes, then it will describe the instruction both with a single-line abbreviated version and then a pseudo-code version, and then it will provide the results of executing that pseudo-code on the machine state vector.  I used `uint8_t` as a hint that those values would be 8-bit only, and then `uint16_t PC` just for symmetry.
 
 ## Testing
-
-[Source](https://github.com/bradgrantham/gpt-4-6502)
 
 In order to execute an instruction, I take my prompt and append the "current" state vector and the bytes for the next instruction, then I send that whole thing to [OpenAI's web API as a JSON completion request](https://platform.openai.com/docs/guides/chat).  (That's why I've used `gpt-4` instead of GPT-4 throughout most of this README; `gpt-4` is the name of the model in the API.)
 
