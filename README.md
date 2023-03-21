@@ -213,7 +213,7 @@ The notable wrong part is `A = A & MEMORY[16]; // A becomes 16 & 4 = 4`.  I'm no
 
 ### Practical Use
 
-At a practical level, I don't think anyone is going to implement a 6502 using a multi-gigabyte model that costs around $0.08 an instruction to run.  But in 10 years will they?  It probably makes more sense to train a model specifically to replace the microprocessor for simulation or whatever.
+At a practical level, I don't think anyone is going to implement a 6502 using a multi-gigabyte model that costs around $0.08 an instruction to run.  But in 10 years will they?  Maybe if it's essentially free.  It probably makes more sense to train a model specifically to replace the microprocessor for simulation or whatever.  What if we had technology to encode a tightly-specified network into an ASIC?
 
 One thing you probably *could* do right now is use `gpt-4` or ChatGPT in GPT-4 mode as a reference for implementing an emulator.  I couldn't get ChatGPT in GPT-3 mode to give me a reasonable emulation switch statement six months ago, but I didn't know much about prompt engineering then.  You might also be able to use GPT-4 to help you reverse-engineer a microprocessor or debug your code.  Some 8-bit processors are still in quite common use.
 
@@ -225,4 +225,4 @@ On one hand, almost every programmer I know could execute that task pretty well.
 
 So `gpt-4` is already much better than most people at a technical task which requires significant reasoning and recall.  Even [GPT-3 passed a technical interview at Google](https://www.pcmag.com/news/chatgpt-passes-google-coding-interview-for-level-3-engineer-with-183k-salary), but for a lower-level job.  I think GPT-5 will usually get this emulation task right, and probably a bunch of harder things.  I suspect it will even be able to get close to telling me the memory vector results without executing the instructions.
 
-My job isn’t programming anymore, most days. I spend most of my time designing interfaces, reviewing code, and thinking about how to improve products and technologies. How long before some very large language model can do that as well as I can?
+My job isn’t programming anymore, most days. I spend a lot of my time reviewing code, providing feedback on interfaces, and thinking about how to improve our product.  I haven't had much luck asking ChatGPT about that. How long before some very large language model will do that better than I can?  
