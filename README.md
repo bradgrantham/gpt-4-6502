@@ -18,7 +18,7 @@ On the suggestion of my friend [Lawrence Kesteloot](https://www.teamten.com/lawr
 
 [Here's fizzbuzz.asm.](https://github.com/bradgrantham/gpt-4-6502/blob/main/fizzbuzz.asm)
 
-When executed, the result of memory locations 1 through 15 are 0xFB if the memory index is FizzBuzz (divisible by 3 and 5), 0xF0 if the index is Fizz, 0xB0 if Buzz, or the value of the index itself otherwise.  So that looks like this in decimal numbers including memory location 0:
+When executed, the result of memory locations 1 through 15 are 0xFB if the memory index is FizzBuzz (divisible by 3 and 5), 0xF0 if the index is Fizz (divisible by 3), 0xB0 if Buzz (divisible by 5), or the value of the index itself otherwise.  So that looks like this in decimal numbers including memory location 0:
 
 ```
 0, 1, 2, 240, 4, 176, 240, 7, 8, 240, 176, 11, 240, 13, 14, 251
