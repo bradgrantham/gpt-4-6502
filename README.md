@@ -147,7 +147,7 @@ A second script, [test-some.py](https://github.com/bradgrantham/gpt-4-6502/blob/
 
 I didn't have a lot of luck with `gpt-3.5-turbo`.  I never got more than half of the results to match the reference.  There were many categories of failures.  Here are some from my notes.  Over the course of this project I didn't save all the revisions of my prompt, so it's possible that these problems are resolved more by prompt improvements than moving from GPT-3 to GPT-4.
 
-1. The model had trouble getting memory locations right.  I can't say *exactly* what the issue was because I don't have any visibility into the structure of the model.  I think I [may not be able to enable probabilities in the output](https://twitter.com/sandersted/status/1637156533963472901?s=20) but I could probably ask the model itself to give me some kind of confidence measurement or explain how it looked up memory locations.  Here's an example:
+1. The model had trouble getting memory locations right.  Here's an example:
    ```
    1607: 169 16
    uint8_t MEMORY[]={0, 1, 2, 240, 4, 176, 240, 7, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 1}, A=8, X=8, N=0, Z=0; uint16_t PC=1607;
@@ -164,7 +164,7 @@ I didn't have a lot of luck with `gpt-3.5-turbo`.  I never got more than half of
    CPU: old PC=1607, bytes=2, MEMORY[]={0, 1, 2, 240, 4, 176, 240, 7, 8, 240, 0, 0, 0, 0, 0, 0, 10, 2, 0}, PC=1609, A=240, X=9, N=1, Z=0
    ```
 
-   It described the instruction correctly and even had correct pseudocode, but then the actual value of `A` was just wrong.  The number `240` is in memory, but I don't know why it thought `MEMORY[16]` was 240.
+   It described the instruction correctly and even had correct pseudocode, but then the actual value of `A` was just wrong.  The number `240` is in memory, but I don't know why it thought `MEMORY[16]` was 240.  I can't say *exactly* what the issue was because I don't have any visibility into the structure of the model.  I think I [may not be able to enable probabilities in the output](https://twitter.com/sandersted/status/1637156533963472901?s=20) but I could probably ask the model itself to give me some kind of confidence measurement or explain how it looked up memory locations.  
 
 2. There were some places where values appeared to be interpreted as hexadecimal.  One instruction repeated several times is 16,  `BPL`.  `gpt-3.5-turbo` interpreted 16 as `ASL` multiple times, but `0x16` *is* `ASL`. 
 
