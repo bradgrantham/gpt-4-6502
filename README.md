@@ -119,11 +119,11 @@ I give a few examples of instructions, so this isn't really a zero-shot prompt. 
 
 ## Testing
 
-In order to execute an instruction, I take my prompt and append the "current" state vector and the bytes for the next instruction, then I send that whole thing to [OpenAI's web API as a JSON completion request](https://platform.openai.com/docs/guides/chat).
+In order to execute an instruction, I take my prompt and append the "current" state vector and the bytes for the next instruction, then I send that whole thing to [OpenAI's web API as a JSON completion request](https://platform.openai.com/docs/guides/chat).  (That's why I've used `gpt-4` instead of GPT-4 throughout most of this README; `gpt-4` is the name of the model in the API.)
 
 (I cheat a little bit because I'm decoding the instruction a little bit on my own up front to know how many bytes are in it.  In my earlier experiments when I hoped `gpt-3.5-turbo` could reply to me asking for each byte from memory and then telling me bytes to write to memory it got hopelessly wrong and verbose.)
 
-Although I have C++ code to emulate a 6502 microprocessor, in order to aid tooling to compare with results from gpt-3.5-turbo, I implemented emulation in a little bit of Python just for the subset in this test. 
+Although I have C++ code to emulate a 6502 microprocessor, in order to aid tooling to compare with results from `gpt-4`, I implemented emulation in a little bit of Python just for the subset in this test. 
 
 I’ve implemented two tools for testing.
 
