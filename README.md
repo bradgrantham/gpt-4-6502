@@ -186,7 +186,7 @@ One thing you probably *could* do right now is use `gpt-4` or ChatGPT in GPT-4 m
 
 ### Implications
 
-I imagine a hypothetical version of the Chinese Room in which a human has reference manuals for the 6502 but no calculator and no way to execute the code themselves. I pass them a single sheet of paper with instructions under the door, then pass three-by-five cards with machine state and an instruction, and they hand me back changes to the machine state. We repeat until they tell me they’re done. (The last card says “0” and that’s “BRK”, after which the person would pass me back a card saying “Stop!”)
+I imagine a hypothetical version of [the Chinese Room](https://en.wikipedia.org/wiki/Chinese_room) in which a human has reference manuals for the 6502 but no calculator and no way to execute the code themselves. I pass them a single sheet of paper with instructions under the door, then pass three-by-five cards with machine state and an instruction, and they hand me back changes to the machine state. We repeat until they tell me they’re done. (The last card says “0” and that’s “BRK”, after which the person would pass me back a card saying “Stop!”)
 
 On one hand, almost every programmer I know could execute that task pretty well. I wouldn’t expect 100% success for 288 instructions just because of lack of attention, ambiguity in instructions, maybe just doing math in one’s head wrong, or exhaustion after doing 288 cards. Maybe a programmer could do better than 90%. On the other hand, people I know who are *not* professional programmers might not even comprehend what I’m asking. I think most of them wouldn’t get many of the cards right at all.
 
