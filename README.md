@@ -72,7 +72,7 @@ After running the provided 6502 machine code, the memory locations from 0 to 15 
 
 Of course that doesn’t work, `gpt-4` is still a feed-forward network at its core, and I doubt it's deep enough to encode 288 machine instructions from input to output without an intervening cycle through the network. There are ways to add external functionality to `gpt-4` so it can perform more accurate math, for example, but that feels like cheating for this experiment.  I *was* able to lead it to a pretty good high-level description of the program with a couple of corrections (e.g. "Is it possible it's using them as counters to 0?") but I couldn't get the correct memory values out of it.
 
-However, ChatGPT (not using the developer playground) surprised me with a really good disassembly listing from this raw hexdump.  I suggest you paste in the hexdump and ask it for a disassembly for that 6502 machine code hexdump.
+However, ChatGPT (not using the developer playground) surprised me with a really good disassembly listing from this raw hexdump.  I suggest you paste in the hexdump and ask it for a disassembly for that 6502 machine code block.
 
 # One Instruction At A Time
 
