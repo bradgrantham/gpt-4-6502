@@ -10,7 +10,7 @@ When Codex, GPT-3, and then ChatGPT were released in turn, it became clear LLMs 
 
 ## Initial Stabs
 
-I spent a chunk of a weekend engineering a JSON protocol for interfacing an external 6502 emulator to my Apple ][ emulation code. The initial disk-less BASIC prompt took emulation of many hundreds of thousands of correct instructions. Based on a couple of initial tests with curl, that would have taken days back and forth to OpenAI’s API and probably would have been prohibitively expensive.
+I spent a chunk of a weekend engineering a JSON protocol for interfacing an external 6502 emulator to my Apple 2 emulation code. The initial disk-less BASIC prompt took emulation of many hundreds of thousands of correct instructions. Based on a couple of initial tests with curl, that would have taken days back and forth to OpenAI’s API and probably would have been prohibitively expensive.
 
 More importantly, the emulation would need to be nearly 100% accurate, and it’s not immediately obvious what prompt to use to ensure accuracy. I’m willing to reduce the program size and microprocessor feature set somewhat and still feel like I could make a credible assessment.
 
@@ -18,7 +18,7 @@ On the suggestion of my friend [Lawrence Kesteloot](https://www.teamten.com/lawr
 
 [Here's fizzbuzz.asm on GitHub.](https://github.com/bradgrantham/gpt-4-6502/blob/main/fizzbuzz.asm)
 
-When executed, the result of memory locations 1 through 15 are 0xFB is the memory index is FizzBuzz (divisible by 3 and 5), 0xF0 if the index is Fizz, 0xB0 if Buzz, or the value of the index itself otherwise.  So that looks like this in decimal numbers including memory location 0:
+When executed, the result of memory locations 1 through 15 are 0xFB if the memory index is FizzBuzz (divisible by 3 and 5), 0xF0 if the index is Fizz, 0xB0 if Buzz, or the value of the index itself otherwise.  So that looks like this in decimal numbers including memory location 0:
 
 ```
 0, 1, 2, 240, 4, 176, 240, 7, 8, 240, 176, 11, 240, 13, 14, 251
@@ -76,7 +76,7 @@ However, ChatGPT (not using the developer playground) surprised me with a really
 
 # One Instruction At A Time
 
-So I continued with my original approach, running one instruction at a time. I tried a bunch of initial experiments, hoping for a prompt that would allow ChatGPT to interpret some kind of regular machine state input, then give me back a machine-readable state vector output.
+So I continued with my original approach, running one instruction at a time. I tried a bunch of initial experiments, hoping for a prompt that would allow GPT-3 and then GPT-4 to interpret some kind of regular machine state input, then give me back a machine-readable state vector output.
 
 I finally settled on a [prompt](https://github.com/bradgrantham/gpt-4-6502/blob/main/prompt.txt) that seemed to work pretty well.  (The first line is provided as the "system" context.). I'll explain some of the bits of the prompt and what I think they do.
 
@@ -145,7 +145,40 @@ The second, [test-some.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/
 
 ## Results
 
-It took me 77 minutes to run `run-all-instructions.py` on March 20th, 2023.  Out of 288 instructions, from `gpt-4` ***only 2 don't match the reference.***
+### gpt-3.5-turbo
+
+I didn't have a lot of luck with `gpt-3.5-turbo`.  I never got more than half of the results to match the reference.  There were many categories of failures.  Here are some from my notes.  Over the course of this project I didn't save all the revisions of my prompt, so it's possible that these problems are resolved more by prompt improvements than moving from GPT-3 to GPT-4.
+
+1. The model had trouble getting memory locations right.  I can't say *exactly* what the issue was because I don't have any visibility into the structure of the model.  I think I [may not be able to enable probabilities in the output](https://twitter.com/sandersted/status/1637156533963472901?s=20) but I could probably ask the model itself to give me some kind of confidence measurement or explain how it looked up memory locations.  Here's an example:
+   ```
+   1607: 169 16
+   uint8_t MEMORY[]={0, 1, 2, 240, 4, 176, 240, 7, 8, 0, 0, 0, 0, 0, 0, 0, 9, 0, 1}, A=8, X=8, N=0, Z=0; uint16_t PC=1607;
+   ```
+
+   This is "LDA 16", load the accumulator from address 16 (0-indexed), so it should become 9.  `gpt-3.5-turbo` gave me:
+   ```
+   DESC: LDA 16; load the value at memory location 16 into A
+   M = 16;
+   A = MEMORY[M];
+   N = (A & 128) != 0;
+   Z = A == 0;
+   PC = PC + 2;
+   CPU: old PC=1607, bytes=2, MEMORY[]={0, 1, 2, 240, 4, 176, 240, 7, 8, 240, 0, 0, 0, 0, 0, 0, 10, 2, 0}, PC=1609, A=240, X=9, N=1, Z=0
+   ```
+
+   It described the instruction correctly and even had correct pseudocode, but then the actual value of `A` was just wrong.  The number `240` is in memory, but I don't know why it thought `MEMORY[16]` was 240.
+
+2. There were some places where values appeared to be interpreted as hexadecimal.  One instruction repeated several times is 16,  `BPL`.  `gpt-3.5-turbo` interpreted 16 as `ASL` multiple times, but `0x16` *is* `ASL`. 
+
+3. `gpt-3.5-turbo` would sometimes give me inconsistent output from one instruction to the next, maybe putting commas between memory locations or maybe putting a period at the end of the `CPU` state.  In one instance, it output `\` at the end of the `CPU` state response, and that was never anywhere in my prompts!
+
+4. I had much better results when I specified `MEMORY` as a C-style array, within braces (`{}`).  That also seemed to help imply I wanted zero-based indexing.
+
+Things also settled down somewhat when I set `temperature=0.0` in my chat API request, so that responses were deterministic.
+
+### gpt-4
+
+Out of 288 instructions, from `gpt-4` ***only 2 don't match the reference.***  It took me 77 minutes to run `run-all-instructions.py` on March 20th, 2023.  
 
 One of them is a mismatch in PC from BRK, so I don't care much about that.  `gpt-4` might actually be correct about that; the PC actually should be pushed and reloaded from a two-byte vector in memory, so I could also be confusing the model.
 
