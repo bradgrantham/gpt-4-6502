@@ -54,6 +54,8 @@ I tried to limit the 6502 features I used. I only use the A and X registers, the
 | 208    | BNE        | Signed 8-bit relative branch "if not equal" (if the Z flag is set) |
 | 76     | JMP        | Absolute value jump (to a 16-bit address)                    |
 
+My measure of success is how well `gpt-4` can produce the same values in memory at completion of the program, which is to say how well could it run FizzBuzz for values 1 to 15.
+
 # Asking ChatGPT to run it directly
 
 Just to get a feel how far off I was, I asked `gpt-4` what the contents of memory are after running the machine code hexdump and then in a separate query after running the disassembly.
