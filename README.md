@@ -96,7 +96,7 @@ I had a lot more luck with GPT when I asked it to first describe what it was goi
 Execute the pseudo-code for the instruction, then finish with "CPU: MEMORY[]={memory contents}, PC=new value, A=new value, X=new value, N=new value, Z=new value"
 ```
 
-I give an example of the format I want, so when GPT responds it will be more likely to format its own output this way.
+I give an example of the format I want, so when GPT responds it will be more likely to format its own output this way.  That's important because I'd like to parse GPT's response using some simple Python code.
 
 ```
   * All numbers are in decimal.
