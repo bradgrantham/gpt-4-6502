@@ -58,7 +58,7 @@ I only use the A and X registers, the N and Z flags, and 18 bytes of zero-page R
 
 # Asking ChatGPT to run it directly
 
-Just to get a feel how far off I was, after providing the entire machine code in hex I asked `gpt-4`  the contents of memory in a separate query.
+Just to get a feel for how far off I was, after providing the entire machine code in hex I asked `gpt-4`  the contents of memory in a separate query.
 
 ```
 After running the provided 6502 machine code, the memory locations from 0 to 15 would contain the following values:
