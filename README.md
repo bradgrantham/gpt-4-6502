@@ -26,6 +26,8 @@ When executed, the result of memory locations 1 through 15 are 0xFB is the memor
 
 (240 is 0xF0, 176 is 0xB0, and 251 is 0xFB).
 
+My measure of success is how well `gpt-4` can produce the same values in memory at completion of the program, which is to say how well could it run FizzBuzz for values 1 to 15.
+
 It’s a small program, just 38 assembled instructions, and including loops the entire execution is 288 instructions. Here’s the hexdump.
 
 ```
@@ -36,7 +38,7 @@ It’s a small program, just 38 assembled instructions, and including loops the 
 0640: 04 a9 04 85 12 e6 10 a9 10 25 10 f0 bf 00
 ```
 
-I tried to limit the 6502 features I used. I only use the A and X registers, the N and Z flags, and 18 bytes of zero-page RAM (technically only 17 since I don’t access memory address 0). I don’t expect the normal 6502 startup, which initializes the PC from memory; I set the PC directly. I don’t use the stack. I assume BRK stops execution.  I only use the following 13 opcodes:
+I only use the A and X registers, the N and Z flags, and 18 bytes of zero-page RAM (technically only 17 since I don’t access memory address 0). I don’t expect the normal 6502 startup, which initializes the PC from memory; I set the PC directly. I don’t use the stack. I assume BRK stops execution.  I only use the following 13 opcodes:
 
 | Opcode | Mnemonic   | Description                                                  |
 | ------ | ---------- | ------------------------------------------------------------ |
@@ -53,8 +55,6 @@ I tried to limit the 6502 features I used. I only use the A and X registers, the
 | 240    | BEQ        | Signed 8-bit relative branch "if equal" (if the Z flag is clear) |
 | 208    | BNE        | Signed 8-bit relative branch "if not equal" (if the Z flag is set) |
 | 76     | JMP        | Absolute value jump (to a 16-bit address)                    |
-
-My measure of success is how well `gpt-4` can produce the same values in memory at completion of the program, which is to say how well could it run FizzBuzz for values 1 to 15.
 
 # Asking ChatGPT to run it directly
 
