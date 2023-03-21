@@ -1,10 +1,10 @@
-# In Which I Convince GPT-4 to be a 6502 microprocessor
+# In Which I Convince GPT-4 to be a 6502 Microprocessor
 
 Almost.
 
 ## Context
 
-Although my day job is [GPU](https://www.lunarg.com/) [APIs](https://github.com/lunarg/gfxreconstruct), I was bitten several years ago by the retrocomputing bug ([The Alice 3](https://lkesteloot.github.io/alice/alice3/), [Apple2A BASIC compiler](https://github.com/bradgrantham/apple2a), [chip-8 emulator](https://github.com/bradgrantham/chip8), [Colecovision emulator](https://github.com/bradgrantham/leathervision)). One of my favorite programs I wrote myself is an [Apple 2 emulator](https://github.com/bradgrantham/apple2e) I wrote for fun. There are definitely better ones, but that one’s mine. In particular I wrote the 6502 microprocessor emulation from scratch, and it had been tricky to get it right.
+Although my day job is [GPU](https://www.lunarg.com/) [APIs](https://github.com/lunarg/gfxreconstruct), I was bitten several years ago by the retrocomputing bug ([The Alice 3](https://lkesteloot.github.io/alice/alice3/), [The Alice 4](https://lkesteloot.github.io/alice/alice4/), [The Apple2A BASIC compiler](https://github.com/bradgrantham/apple2a), [a chip-8 emulator](https://github.com/bradgrantham/chip8), [a Colecovision emulator](https://github.com/bradgrantham/leathervision)). One of my favorite programs I wrote myself is an [Apple 2 emulator](https://github.com/bradgrantham/apple2e) I wrote for fun. There are definitely better ones, but that one’s mine. In particular I wrote the 6502 microprocessor emulation from scratch, and it had been tricky to get it right.
 
 When Codex, GPT-3, and then ChatGPT were released in turn, it became clear LLMs can have astonishing levels of [integrated technical knowledge](https://www.engraved.blog/building-a-virtual-machine-inside/). My joke at the time was that I should have ChatGPT do 6502 emulation for me. It’s become very obvious to me lately that [should *not* be a joke](https://karpathy.medium.com/software-2-0-a64152b37c35), and I should investigate ways a trained machine learning model can solve these kinds of problems for me. Probably the most appropriate solution would be to build my own network to emulate a processor, then train it. But since everyone else is making ChatGPT do crazy things, I want to join the bandwagon.
 
@@ -130,6 +130,8 @@ CPU: MEMORY[]={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4}, A=6, X=
 I give a few examples of instructions, so this isn't really a zero-shot prompt.  I'm telling the model that I expect to give it a machine state vector and then the instruction bytes, then it will describe the instruction both with a single-line abbreviated version and then a pseudo-code version, and then it will provide the results of executing that pseudo-code on the machine state vector.  I used `uint8_t` as a hint that those values would be 8-bit only, and then `uint16_t PC` just for symmetry.
 
 ## Testing
+
+[Source](https://github.com/bradgrantham/gpt-4-6502)
 
 In order to execute an instruction, I take my prompt and append the "current" state vector and the bytes for the next instruction, then I send that whole thing to [OpenAI's web API as a JSON completion request](https://platform.openai.com/docs/guides/chat).  (That's why I've used `gpt-4` instead of GPT-4 throughout most of this README; `gpt-4` is the name of the model in the API.)
 
