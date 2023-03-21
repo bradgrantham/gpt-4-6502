@@ -141,7 +141,7 @@ I’ve implemented two tools for testing.
 
 The first, [run-all-instructions.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/run-all-instructions.py), runs the program all the way through, one instruction at a time, to generate the reference results, and then sends each instruction with my hand-crafted prompt to OpenAI’s Python API as well. The script does not check the correctness of the output from OpenAI. Instead, I used the saved output to assess how close my prompt brought `gpt-4` to accurate results for all of the machine states and instruction variants in the program. This script takes on the order of $24 to run all 288 instructions at OpenAI’s `gpt-4` rates as of March 2023, depending highly on the prompt and how verbose the response is. (So running on the order of 500K instructions to get to an Apple ][ prompt would have cost me around **forty thousand dollars**!)
 
-The second, test-some.py (**link**), runs one or more machine state vectors and instructions just so I can see the output. This limits my cost for the OpenAI and allows me to quickly try different prompt variants.
+The second, [test-some.py](https://github.com/bradgrantham/gpt-4-6502/blob/main/test-some.py), runs one or more machine state vectors and instructions just so I can see the output. This limits my cost for the OpenAI and allows me to quickly try different prompt variants.
 
 ## Results
 
