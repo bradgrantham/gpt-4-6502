@@ -12,9 +12,19 @@ When Codex, GPT-3, and then ChatGPT were released in turn, it became clear LLMs 
 
 I spent a chunk of a weekend engineering a JSON protocol for interfacing an external 6502 emulator to my Apple ][ emulation code. The initial disk-less BASIC prompt took emulation of many hundreds of thousands of correct instructions. Based on a couple of initial tests with curl, that would have taken days back and forth to OpenAI’s API and probably would have been prohibitively expensive.
 
-More importantly, the emulation would need to be nearly 100% accurate, and it’s not immediately obvious what prompt to use to ensure accuracy. I’m willing to reduce the program size and microprocessor feature set somewhat and still feel like I could make a credible assessment. On the suggestion of my friend [Lawrence Kesteloot](https://www.teamten.com/lawrence/) I implemented a short [“FizzBuzz”](https://en.wikipedia.org/wiki/Fizz_buzz) program directly in 6502 assembly language. I used [Nick Morgan’s excellent online 6502 assembler and emulator](https://skilldrick.github.io/easy6502/) to write the code and test it.
+More importantly, the emulation would need to be nearly 100% accurate, and it’s not immediately obvious what prompt to use to ensure accuracy. I’m willing to reduce the program size and microprocessor feature set somewhat and still feel like I could make a credible assessment.
+
+On the suggestion of my friend [Lawrence Kesteloot](https://www.teamten.com/lawrence/) I implemented a short [“FizzBuzz”](https://en.wikipedia.org/wiki/Fizz_buzz) program directly in 6502 assembly language. I used [Nick Morgan’s excellent online 6502 assembler and emulator](https://skilldrick.github.io/easy6502/) to write the code and test it.
 
 [Here's fizzbuzz.asm on GitHub.](https://github.com/bradgrantham/gpt-4-6502/blob/main/fizzbuzz.asm)
+
+When executed, the result of memory locations 1 through 15 are 0xFB is the memory index is FizzBuzz (divisible by 3 and 5), 0xF0 if the index is Fizz, 0xB0 if Buzz, or the value of the index itself otherwise.  So that looks like this in decimal numbers including memory location 0:
+
+```
+0, 1, 2, 240, 4, 176, 240, 7, 8, 240, 176, 11, 240, 13, 14, 251
+```
+
+(240 is 0xF0, 176 is 0xB0, and 251 is 0xFB).
 
 It’s a small program, just 38 assembled instructions, and including loops the entire execution is 288 instructions. Here’s the hexdump.
 
